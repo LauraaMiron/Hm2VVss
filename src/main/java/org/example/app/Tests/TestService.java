@@ -4,6 +4,8 @@ package org.example.app.Tests;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.example.domain.Student;
+import org.example.domain.Tema;
+import org.example.validation.TemaValidator;
 import org.junit.Test;
 import org.example.validation.StudentValidator;
 import org.example.validation.ValidationException;
@@ -150,4 +152,144 @@ public class TestService {
         // Act & Assert
         assertDoesNotThrow(() -> validator.validate(student));
     }
+
+    @Test
+    public void testAddTemaWithValidData() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithEmptyNrTema() {
+        // Arrange
+        Tema tema = new Tema("", "Descriere tema", 5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+
+    @Test
+    public void testAddTemaWithEmptyDescriere() {
+        // Arrange
+        Tema tema = new Tema("1", "", 5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithNegativeDeadline() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", -5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithZeroPrimire() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, 0);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+    @Test
+    public void testAddTemaWithDeadlineEqualToPrimire() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, 5);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithDeadlineBeforePrimire() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, 10);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithNullNrTema() {
+        // Arrange
+        Tema tema = new Tema(null, "Descriere tema", 5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithNullDescriere() {
+        // Arrange
+        Tema tema = new Tema("1", null, 5, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+    @Test
+    public void testAddTemaWithZeroDeadline() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 0, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithNegativePrimire() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, -1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertThrows(ValidationException.class, () -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithMaxDeadline() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", Integer.MAX_VALUE, 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithMaxPrimire() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, Integer.MAX_VALUE);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> validator.validate(tema));
+    }
+
+    @Test
+    public void testAddTemaWithMaxPrimireMinusOne() {
+        // Arrange
+        Tema tema = new Tema("1", "Descriere tema", 5, Integer.MAX_VALUE - 1);
+        TemaValidator validator = new TemaValidator();
+
+        // Act & Assert
+        assertDoesNotThrow(() -> validator.validate(tema));
+    }
+
 }
